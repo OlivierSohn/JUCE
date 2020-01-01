@@ -821,7 +821,7 @@ void AudioProcessor::audioIOChanged (bool busNumberChanged, bool channelNumChang
 //==============================================================================
 void AudioProcessor::editorBeingDeleted (AudioProcessorEditor* const editor) noexcept
 {
-    const ScopedLock sl (callbackLock);
+    const ScopedLock sl (editorLock);
 
     if (activeEditor == editor)
         activeEditor = nullptr;
@@ -829,6 +829,8 @@ void AudioProcessor::editorBeingDeleted (AudioProcessorEditor* const editor) noe
 
 AudioProcessorEditor* AudioProcessor::createEditorIfNeeded()
 {
+    const ScopedLock sl (editorLock);
+
     if (activeEditor != nullptr)
         return activeEditor;
 
@@ -839,7 +841,6 @@ AudioProcessorEditor* AudioProcessor::createEditorIfNeeded()
         // you must give your editor comp a size before returning it..
         jassert (ed->getWidth() > 0 && ed->getHeight() > 0);
 
-        const ScopedLock sl (callbackLock);
         activeEditor = ed;
     }
 

@@ -1453,7 +1453,10 @@ private:
 
     //==============================================================================
     Array<AudioProcessorListener*> listeners;
+
+    CriticalSection editorLock; // protects access to activeEditor
     Component::SafePointer<AudioProcessorEditor> activeEditor;
+
     double currentSampleRate = 0;
     int blockSize = 0, latencySamples = 0;
     bool suspended = false, nonRealtime = false;
